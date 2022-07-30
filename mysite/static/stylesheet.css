@@ -1,0 +1,60 @@
+div.form {
+    display:grid;
+	justify-content: center;
+	align-content: center;
+    grid-template-columns: max-content max-content;
+    grid-gap:10px;
+    padding-top: 10px;
+    width: 100%;
+    padding-right: 20%;
+}
+
+a.form{
+	width: 150%;
+}
+
+li.list-group-item {
+	width: 60%;
+	}
+
+input {
+	width: 100%;
+
+}
+input.pref {
+	display:block;
+	margin-right:0;
+	margin-left:auto;
+
+	}
+select {
+	width: 150%;
+}
+
+input[type=checkbox]{
+	display: inline-block;
+	float: right;
+	width:10%;
+}
+
+div.form label { 
+	text-align:right;
+	word-wrap: break-word;
+	min-width: 0;
+ }
+
+
+button {
+	background-color: #008CBA;
+	color: white;
+	border-radius: 6px;
+}
+
+
+.container {
+	text-align: left;
+}
+
+.btn {
+	width: 20%;
+}
