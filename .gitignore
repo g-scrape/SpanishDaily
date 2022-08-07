@@ -150,3 +150,11 @@ token.txt
 
 # Ignore virtual env
 .virtualenvs
+.ssh
+bare-repos/mysit.git
+.bashrc
+.my.cnf
+.profile
+.pythonstartup.py
+.vimrc
+README.txt
