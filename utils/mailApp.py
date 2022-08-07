@@ -9,7 +9,7 @@ from email.message import EmailMessage
 # EMAIL_ADDRESS = 'daily-article@readspanishdaily.com'
 
 def sendEmail(url, diff, topic, bcc):
-    exec(open('/home/gharold/SpanishDaily/env_vars.py').read())
+    exec(open('/home/gharold/utils/env_vars.py').read())
     EMAIL_ADDRESS = os.environ.get('GMAIL')
     PASSWORD = os.environ.get('GMAIL_KEY')
     print('url: ')

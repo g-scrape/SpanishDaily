@@ -6,7 +6,7 @@ from functools import wraps
 import mysql.connector
 import os
 
-exec(open('/home/gharold/SpanishDaily/env_vars.py').read())
+exec(open('/home/gharold/utils/env_vars.py').read())
 app = Flask(__name__)
 app.secret_key='secret123'
 
@@ -21,12 +21,12 @@ connection = mysql.connector.connect(
 @app.route('/',  methods=['GET', 'POST'])
 def index():
     connection = mysql.connector.connect(
-        host='gharold.mysql.pythonanywhere-services.com',
-        user='gharold',
-        password='Weatherdb_96',
-        database='gharold$default'
+        host=os.environ.get('DB_HOST'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASS'),
+        database=os.environ.get('DB_NAME')
         )
-    app.logger.info('in index')
+
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         email = form.email.data
@@ -77,10 +77,10 @@ def about():
 @app.route('/profile')
 def profile():
     connection = mysql.connector.connect(
-        host='gharold.mysql.pythonanywhere-services.com',
-        user='gharold',
-        password='Weatherdb_96',
-        database='gharold$default'
+        host=os.environ.get('DB_HOST'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASS'),
+        database=os.environ.get('DB_NAME')
         )
     #declare all genres
     genres = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
@@ -133,10 +133,10 @@ class RegisterForm(Form):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     connection = mysql.connector.connect(
-        host='gharold.mysql.pythonanywhere-services.com',
-        user='gharold',
-        password='Weatherdb_96',
-        database='gharold$default'
+        host=os.environ.get('DB_HOST'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASS'),
+        database=os.environ.get('DB_NAME')
         )
     if request.method == 'POST':
         # Get Form Fields
