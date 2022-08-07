@@ -9,7 +9,15 @@ from email.message import EmailMessage
 # EMAIL_ADDRESS = 'daily-article@readspanishdaily.com'
 
 def sendEmail(url, diff, topic, bcc):
-    exec(open('/home/gharold/utils/env_vars.py').read())
+#grab envVars locally or in prod
+    path = ''
+    if os.name == 'nt':
+        path = 'C:/Users/glens/.spyder-py3/Practice Projects/SpanishDaily/SpanishDaily/home/gharold/utils/env_vars.py'
+    elif os.name == 'posix':
+        path = '/home/gharold/utils/env_vars.py'
+
+    exec(open(path).read())    
+    
     EMAIL_ADDRESS = os.environ.get('GMAIL')
     PASSWORD = os.environ.get('GMAIL_KEY')
     print('url: ')

@@ -6,7 +6,14 @@ from functools import wraps
 import mysql.connector
 import os
 
-exec(open('/home/gharold/utils/env_vars.py').read())
+#grab envVars locally or in prod
+path = ''
+if os.name == 'nt':
+    path = 'C:/Users/glens/.spyder-py3/Practice Projects/SpanishDaily/SpanishDaily/home/gharold/utils/env_vars.py'
+elif os.name == 'posix':
+    path = '/home/gharold/utils/env_vars.py'
+
+exec(open(path).read())
 app = Flask(__name__)
 app.secret_key='secret123'
 
