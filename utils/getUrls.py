@@ -157,7 +157,7 @@ def evalTopic(topic):
 
 def sendEmails(urlDict, topic):
     #connect to db
-    exec(open('/home/gharold/SpanishDaily/env_vars.py').read())
+    exec(open('/home/gharold/utils/env_vars.py').read())
     connection = mysql.connector.connect(
         host=os.environ.get('DB_HOST'),
         user=os.environ.get('DB_USER'),
