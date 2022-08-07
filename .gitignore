@@ -146,6 +146,7 @@ env_vars.py
 # Ignore credentials
 credentials.json
 token.json
+token.txt
 
 # Ignore virtual env
 .virtualenvs
