@@ -77,7 +77,7 @@ def sendEmail(url, diff, topic, bcc):
 
         except:
            print('There was an error, email not sent to: ' + ", ".join(bcc))
-            return 'error'
+           return 'error'
 
     else:
         print('No receipients for this topic/diff')
