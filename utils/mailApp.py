@@ -53,7 +53,8 @@ def sendEmail(url, diff, topic, bcc):
                 msg = MIMEMultipart('alternative')
                 msg['Subject'] = 'Your Daily ' + topic + ' Article!'
                 msg['From'] = EMAIL_ADDRESS
-                msg['BCC'] = "glensilas95@gmail.com"
+                msg['BCC'] = ", ".join(bcc)
+
                 
                 text = "this is the standard text string"
                 with open('utils/email_template.html') as f:
@@ -70,7 +71,7 @@ def sendEmail(url, diff, topic, bcc):
                 msg.attach(part1)
                 msg.attach(part2)
                 # Send the message via local SMTP server.
-                smtp.sendmail(EMAIL_ADDRESS, "glensilas95@gmail.com", msg.as_string())
+                smtp.sendmail(EMAIL_ADDRESS, msg['BCC'], msg.as_string())
 
                 print('Topic: ' + topic + ', diff: ' + diff + ' - sent to ' + str(len(bcc)) + ' users')
                 return 'Success'
