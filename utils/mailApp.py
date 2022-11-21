@@ -39,15 +39,10 @@ def sendEmail(url, diff, topic, bcc):
                 smtp.login(EMAIL_ADDRESS, PASSWORD)
                 msg = EmailMessage()
                 #if url is a list, then [0] is the URL and [1] is the substituted rating
-# =============================================================================
-#                 if type(url) == list:
-#                     print('closest article to ' + diff + ' sent')
-#                     realDiff = url[1]
-#                     url = url[0]
-#                     body = 'No `' + diff + '` articles found for: ' + topic + '. The closest we could find was this `' + realDiff + '` article here: ' + url
-#                 else:
-#                     body = 'Enjoy this `' + diff + '` ' + topic + ' article: ' + url
-# =============================================================================
+
+                if type(url) == list:
+                    print('closest article to ' + diff + ' sent')
+                    url = url[0]
 
                 # Create the body of the message (a plain-text and an HTML version).
                 msg = MIMEMultipart('alternative')
