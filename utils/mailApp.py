@@ -30,7 +30,7 @@ def sendEmail(url, diff, topic, recipients):
     print('recipients list: ')
     print(*recipients, sep=", ")
     if len(recipients) > 0:
-        #try:
+        try:
             with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                 #open mail port
                 smtp.ehlo()
@@ -78,9 +78,9 @@ def sendEmail(url, diff, topic, recipients):
                 print('Topic: ' + topic + ', diff: ' + diff + ' - sent to ' + str(len(recipients)) + ' users')
                 return 'Success'
 
-        #except:
-           #print('There was an error, email not sent to: ' + ", ".join(recipients))
-           #return 'error'
+        except:
+           print('There was an error, email not sent to: ' + ", ".join(recipients))
+           return 'error'
 
     else:
         print('No receipients for this topic/diff')
