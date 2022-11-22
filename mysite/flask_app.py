@@ -81,7 +81,7 @@ def about():
     return render_template('about.html')
 
 # Profile
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     connection = mysql.connector.connect(
         host=os.environ.get('DB_HOST'),
@@ -104,19 +104,34 @@ def profile():
 
     #Pull preferences based on uid
     cur.execute("SELECT preference FROM preferences WHERE userId = %s", [uid])
-    preferences = cur.fetchall()
+    preference = cur.fetchone()
+    preference = preference['preference']
 
     #loop through preferences to determine which are selected vs not
-    for item in preferences:
-        if item['preference'] in genres:
-            genres.remove(item['preference'])
+    genres.remove(preference)
 
+    if request.method == 'POST':
+        try:
+            # Get users selected genre
+            updateChoice = request.form['genreChoice']
+            #reset preference to the selected choice
+            preference = updateChoice
+            # Update user's preferences with their selection
+            cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
+            # Commit to DB
+            connection.commit()
+            flash('Preference updated to: ' + updateChoice, 'success')
+        except:
+            print('exception occured')
+
+
+            
     # Close connection
     cur.close()
 
     #preferences = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
 
-    return render_template('profile.html', preferences=preferences, genres=genres)
+    return render_template('profile.html', preference=preference, genres=genres)
 
 
 
