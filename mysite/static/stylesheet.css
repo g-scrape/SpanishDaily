@@ -37,6 +37,12 @@ input[type=checkbox]{
 	width:10%;
 }
 
+input[type=radio]{
+	display: inline-block;
+	float: right;
+	width:10%;
+}
+
 div.form label { 
 	text-align:right;
 	word-wrap: break-word;
