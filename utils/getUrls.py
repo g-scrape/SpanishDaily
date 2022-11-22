@@ -198,13 +198,13 @@ def sendEmails(urlDict, topic):
         url = urlDict[diff]
         print('url: ')
         print(url)
-        cur.execute("SELECT email, spanishLevel, preference FROM users INNER JOIN preferences ON users.userId=preferences.userId WHERE preferences.preference = %s AND users.spanishLevel = %s", (topic, diff))
-        bcc = []
+        cur.execute("SELECT email, spanishLevel, preference FROM users INNER JOIN preferences ON users.userId=preferences.userId WHERE preferences.preference = %s AND users.spanishLevel = %s AND users.sendEmail = 1", (topic, diff))
+        recipients = []
         results = cur.fetchall()
         for sDict in results:
-            bcc.append(sDict['email'])
-        print(bcc)
-        sendEmail(url, diff, topic, bcc)
+            recipients.append(sDict['email'])
+        print(recipients)
+        sendEmail(url, diff, topic, recipients)
 
     cur.close()
     connection.close()

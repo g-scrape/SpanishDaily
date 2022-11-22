@@ -5,6 +5,7 @@ from passlib.hash import sha256_crypt
 from functools import wraps
 import mysql.connector
 import os
+from itsdangerous import URLSafeSerializer, BadData
 
 #grab envVars locally or in prod
 path = ''
@@ -192,6 +193,38 @@ def login():
             error = 'Email not found'
             return render_template('login.html', error=error)
     return render_template('login.html')
+
+# unsubscribe
+@app.route('/unsubscribe/<token>')
+def unsubscribe(token):
+    s = URLSafeSerializer(os.environ.get('SECRET_KEY'), salt='unsubscribe')
+    
+    try:
+        email = s.loads(token)
+        print(email)
+        connection = mysql.connector.connect(
+            host=os.environ.get('DB_HOST'),
+            user=os.environ.get('DB_USER'),
+            password=os.environ.get('DB_PASS'),
+            database=os.environ.get('DB_NAME')
+            )   
+   
+        # Create cursor
+        cur = connection.cursor()
+    
+        # Get uid
+        cur.execute("UPDATE users SET sendEmail = 0 WHERE email = %s", (email,))    
+        
+        # Commit to DB
+        connection.commit()
+        flash('You are now unsubscribed', 'info')
+    except BadData:
+        flash('Token invalid, please login to unsubscribe', 'danger')
+   
+
+
+    
+    return render_template('unsubscribe.html')
 
 # Check if user logged in
 def is_logged_in(f):
