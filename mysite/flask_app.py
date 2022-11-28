@@ -34,13 +34,22 @@ def index():
         password=os.environ.get('DB_PASS'),
         database=os.environ.get('DB_NAME')
         )
-
-    form = RegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
-        email = form.email.data
-        preference = form.preferences.data
-        spanishLevel = form.spanishLevel.data
-        password = sha256_crypt.encrypt(str(form.password.data))
+    
+    Register = RegisterForm(request.form)
+    Sample = SampleArticle(request.form)
+    url=''
+    return render_template('home.html', Register=Register, Sample=Sample,  url=url, linkVisibility = "none", formVisibility = "block")  
+@app.route('/register', methods=['POST'])
+def register():
+    Register = RegisterForm(request.form)
+    Sample = SampleArticle(request.form)
+    url=''
+    #create logic for the /register path
+    if Register.validate():
+        email = Register.email.data
+        preference = Register.preferences.data
+        spanishLevel = Register.spanishLevel.data
+        password = sha256_crypt.encrypt(str(Register.password.data))
 
         # Create cursor
         cur = connection.cursor(buffered=True)
@@ -74,7 +83,81 @@ def index():
         flash('You are now registered and can log in', 'success')
 
         return redirect(url_for('profile'))
-    return render_template('home.html', form=form)
+    return render_template('home.html', Register=Register, Sample=Sample,  url=url, linkVisibility = "none", formVisibility = "block")
+
+@app.route('/sample', methods=['POST'])
+def sample():
+    Register = RegisterForm(request.form)
+    Sample = SampleArticle(request.form)
+   
+    #create logic for the /register path
+    if Sample.validate():
+        preference = Sample.samplePreference.data
+        spanishLevel = Sample.sampleSpanishLevel.data
+
+        # Create cursor
+        cur = connection.cursor()
+        # Execute query
+        cur.execute("SELECT Url FROM samples WHERE diff = %s and topic = %s", (spanishLevel, preference))                
+        url = cur.fetchone()[0]
+        return render_template('home.html', Register=Register, Sample=Sample, url=url, linkVisibility = "block", formVisibility = "none")       
+
+
+    # Register = RegisterForm(request.form)
+    # if request.method == 'POST' and Register.validate():
+    #     email = Register.email.data
+    #     preference = Register.preferences.data
+    #     spanishLevel = Register.spanishLevel.data
+    #     password = sha256_crypt.encrypt(str(Register.password.data))
+
+    #     # Create cursor
+    #     cur = connection.cursor(buffered=True)
+
+    #     #check for existing credentials
+    #     cur.execute("SELECT 1 FROM users where email = %s", [email])
+    #     userCheck = cur.fetchone()
+    #     if userCheck is not None:
+    #         flash('This email is already used, please login', 'danger')
+    #         return redirect(url_for('login'))
+
+    #     # Execute query
+    #     cur.execute("INSERT INTO users(email, password, spanishLevel) VALUES(%s, %s, %s)", (email, password, spanishLevel))
+    #     cur.execute("SELECT userId FROM users WHERE email = %s", [email])
+
+    #     #idk, the fetchall returns a tuple inside a list so need to index the FK int
+    #     uid = cur.fetchall()
+
+    #     uid = uid[0][0]
+
+    #     cur.execute("INSERT INTO preferences(userId, preference) VALUES(%s, %s)", (uid, str(preference)))
+
+    #     # Commit to DB
+    #     connection.commit()
+
+    #     # Close connection
+    #     cur.close()
+
+    #     session['logged_in'] = True
+    #     session['email'] = email
+    #     flash('You are now registered and can log in', 'success')
+
+    #     return redirect(url_for('profile'))
+    
+
+    # Sample = SampleArticle(request.form)
+    # if request.method == 'POST':
+    #     preference = Sample.samplePreference.data
+    #     spanishLevel = Sample.sampleSpanishLevel.data
+        
+    #     # Create cursor
+    #     cur = connection.cursor()
+    #     # Execute query
+    #     cur.execute("SELECT Url FROM samples WHERE diff = %s and topic = %s", (spanishLevel, preference))                
+    #     url = cur.fetchone()
+    #     return render_template('home.html', url=url)
+
+    
+    return render_template('home.html', Register=Register, Sample=Sample)
 
 # About
 @app.route('/about')
@@ -151,6 +234,11 @@ class RegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+#one time article Form Class
+class SampleArticle(Form):
+    samplePreference = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
+
+    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])    
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
