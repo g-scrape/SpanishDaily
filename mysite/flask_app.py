@@ -77,25 +77,13 @@ def index():
         flash('You are now registered and can log in', 'success')
 
         return redirect(url_for('profile'))
+    #get samples into /home. Should refactor this to reduce db calls for scalabilility
     cur = connection.cursor(dictionary=True)
     cur.execute('SELECT Url, diff, topic FROM samples')
     samples = cur.fetchall()
     samples = json.dumps(samples)
     
-    Sample = SampleArticle(request.form)
-    if request.method == 'POST':
-        preference = Sample.samplePreference.data
-        spanishLevel = Sample.sampleSpanishLevel.data
-        
-        # Create cursor
-        cur = connection.cursor()
-        # Execute query
-        cur.execute("SELECT Url FROM samples WHERE diff = %s and topic = %s", (spanishLevel, preference))                
-        url = cur.fetchone()
-        return render_template('home.html', url=url, samples=samples)
-
-    
-    return render_template('home.html', Register=Register, Sample=Sample, samples=samples)
+    return render_template('home.html', Register=Register, samples=samples)
 
 # About
 @app.route('/about')
