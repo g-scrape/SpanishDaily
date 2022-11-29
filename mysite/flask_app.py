@@ -6,6 +6,7 @@ from functools import wraps
 import mysql.connector
 import os
 from itsdangerous import URLSafeSerializer, BadData
+import json
 
 #grab envVars locally or in prod
 path = ''
@@ -35,12 +36,14 @@ def index():
         database=os.environ.get('DB_NAME')
         )
 
-    form = RegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
-        email = form.email.data
-        preference = form.preferences.data
-        spanishLevel = form.spanishLevel.data
-        password = sha256_crypt.encrypt(str(form.password.data))
+    url=''
+
+    Register = RegisterForm(request.form)
+    if request.method == 'POST' and Register.validate():
+        email = Register.email.data
+        preference = Register.preferences.data
+        spanishLevel = Register.spanishLevel.data
+        password = sha256_crypt.encrypt(str(Register.password.data))
 
         # Create cursor
         cur = connection.cursor(buffered=True)
@@ -74,7 +77,13 @@ def index():
         flash('You are now registered and can log in', 'success')
 
         return redirect(url_for('profile'))
-    return render_template('home.html', form=form)
+    #get samples into /home. Should refactor this to reduce db calls for scalabilility
+    cur = connection.cursor(dictionary=True)
+    cur.execute('SELECT Url, diff, topic FROM samples')
+    samples = cur.fetchall()
+    samples = json.dumps(samples)
+    
+    return render_template('home.html', Register=Register, samples=samples)
 
 # About
 @app.route('/about')
@@ -151,6 +160,11 @@ class RegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+#one time article Form Class
+class SampleArticle(Form):
+    samplePreference = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
+
+    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])    
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
