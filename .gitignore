@@ -157,4 +157,5 @@ bare-repos/mysit.git
 .profile
 .pythonstartup.py
 .vimrc
+.viminfo
 README.txt
