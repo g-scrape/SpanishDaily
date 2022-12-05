@@ -154,14 +154,14 @@ def logSamples(urlDict, topic):
     if os.name == 'nt':
         path = 'C:/Users/glens/.spyder-py3/Practice Projects/SpanishDaily/SpanishDaily/home/gharold/utils/env_vars.py'
     elif os.name == 'posix':
-        path = '/home/gharold/utils/env_vars.py'    
-    exec(open(path).read()) 
+        path = '/home/gharold/utils/env_vars.py'
+    exec(open(path).read())
     connection = mysql.connector.connect(
         host=os.environ.get('DB_HOST'),
         user=os.environ.get('DB_USER'),
         password=os.environ.get('DB_PASS'),
         database=os.environ.get('DB_NAME')
-    )   
+    )
 
     topicTranslator = {
     'deportes': 'Sports',
@@ -173,7 +173,7 @@ def logSamples(urlDict, topic):
     }
 
     topic = topicTranslator[topic]
-    
+
     for diff, url in urlDict.items():
         #converted unavailabe diffs to URLs
         if type(url) == list:
@@ -182,7 +182,7 @@ def logSamples(urlDict, topic):
         print('diff: ' + diff)
         print('topic: ' + topic)
         #set cursor
-        cur = connection.cursor() 
+        cur = connection.cursor()
         #replace with fresh URLs
         cur.execute('UPDATE samples SET Url = %s WHERE diff = %s and topic = %s', (url, diff, topic))
         connection.commit()
@@ -207,7 +207,7 @@ def sendEmails(urlDict, topic):
     elif os.name == 'posix':
         path = '/home/gharold/utils/env_vars.py'
 
-    exec(open(path).read())    
+    exec(open(path).read())
     connection = mysql.connector.connect(
         host=os.environ.get('DB_HOST'),
         user=os.environ.get('DB_USER'),
@@ -263,7 +263,7 @@ for topic in topics:
     urlDict = evalTopic(topic)
     print(urlDict)
     logSamples(urlDict, topic)
-    #sendEmails(urlDict, topic)
+    sendEmails(urlDict, topic)
 #bug - articles being sent to non-subbed users, see politics and >1 news
 
 print('Program Complete')
