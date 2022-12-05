@@ -6,6 +6,8 @@ from functools import wraps
 import mysql.connector
 import os
 from itsdangerous import URLSafeSerializer, BadData
+import json
+from verifyEmail import sendVerificationEmail
 
 #grab envVars locally or in prod
 path = ''
@@ -35,12 +37,12 @@ def index():
         database=os.environ.get('DB_NAME')
         )
 
-    form = RegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
-        email = form.email.data
-        preference = form.preferences.data
-        spanishLevel = form.spanishLevel.data
-        password = sha256_crypt.encrypt(str(form.password.data))
+    Register = RegisterForm(request.form)
+    if request.method == 'POST' and Register.validate():
+        email = Register.email.data
+        preference = Register.preferences.data
+        spanishLevel = Register.spanishLevel.data
+        password = sha256_crypt.encrypt(str(Register.password.data))
 
         # Create cursor
         cur = connection.cursor(buffered=True)
@@ -53,7 +55,7 @@ def index():
             return redirect(url_for('login'))
 
         # Execute query
-        cur.execute("INSERT INTO users(email, password, spanishLevel) VALUES(%s, %s, %s)", (email, password, spanishLevel))
+        cur.execute("INSERT INTO users(email, password, spanishLevel, sendEmail, verifiedEmail) VALUES(%s, %s, %s, %s, %s)", (email, password, spanishLevel, 0, 0))
         cur.execute("SELECT userId FROM users WHERE email = %s", [email])
 
         #idk, the fetchall returns a tuple inside a list so need to index the FK int
@@ -69,12 +71,20 @@ def index():
         # Close connection
         cur.close()
 
-        session['logged_in'] = True
-        session['email'] = email
-        flash('You are now registered and can log in', 'success')
+        # session['logged_in'] = True
+        # session['email'] = email
+        # flash('You are now registered and can log in', 'success')
+        sendVerificationEmail(email)
+        flash('You are now registered! A verification email has been sent to your inbox. Please confirm your email to complete the account setup', 'success')
 
-        return redirect(url_for('profile'))
-    return render_template('home.html', form=form)
+        # return redirect(url_for('profile'))
+    #get samples into /home. Should refactor this to reduce db calls for scalabilility
+    cur = connection.cursor(dictionary=True)
+    cur.execute('SELECT Url, diff, topic FROM samples')
+    samples = cur.fetchall()
+    samples = json.dumps(samples)
+    
+    return render_template('home.html', Register=Register, samples=samples)
 
 # About
 @app.route('/about')
@@ -151,6 +161,11 @@ class RegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+#one time article Form Class
+class SampleArticle(Form):
+    samplePreference = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
+
+    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])    
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
@@ -219,9 +234,41 @@ def unsubscribe(token):
         connection.commit()
         flash('You are now unsubscribed', 'info')
     except BadData:
+
         flash('Token invalid, please login to unsubscribe', 'danger')
 
     return render_template('unsubscribe.html')
+
+# verify email
+@app.route('/verify/<token>')
+def verify(token):
+    s = URLSafeSerializer(os.environ.get('SECRET_KEY'), salt='verify')
+    
+    try:
+        email = s.loads(token)
+        print(email)
+        connection = mysql.connector.connect(
+            host=os.environ.get('DB_HOST'),
+            user=os.environ.get('DB_USER'),
+            password=os.environ.get('DB_PASS'),
+            database=os.environ.get('DB_NAME')
+            )   
+   
+        # Create cursor
+        cur = connection.cursor()
+    
+        # Get uid
+        cur.execute("UPDATE users SET verifiedEmail = 1, sendEmail = 1 WHERE email = %s", (email,))    
+        
+        # Commit to DB
+        connection.commit()
+        flash('Your email is now verified; please log in', 'info')        
+
+    except BadData:
+        flash('Token invalid, please register again', 'danger')
+   
+
+    return redirect(url_for('login'))
 
 # Check if user logged in
 def is_logged_in(f):
@@ -245,4 +292,4 @@ def logout():
 
 if __name__ == '__main__':
     app.secret_key='secret123'
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)

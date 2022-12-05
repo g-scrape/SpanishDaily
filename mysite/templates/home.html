@@ -2,57 +2,125 @@
 
 {% block body %}
   <div class="jumbotron text-center">
-    <h1>Welcome to Daily Spanish</h1>
+    <h1>Welcome to Spanish Daily</h1>
     <p class="lead">This website will send you an article every day to practice your Spanish!</p>
     {% if session.logged_in == NULL %}
     <div class='container'>
-<!--     <div class='form'>
-      <label for='userEmail'>Email: </label>
-      <input type='text' id='userEmail'>
-
-      <label for='preferences'>Preferred Article Topic: </label>
-      <select id='preferences'>
-      		<option value='' selected disabled>Please choose a topic</option>
-      		<option value='deportes'>Sports</option>
-      		<option value='noticias'>News</option>
-      		<option value='politicas'>Politics</option>
-      		<option value='viaje'>Travel</option>
-      		<option value='tecnología'>Tech</option>
-      		<option value='finanzas'>Finance</option>
-      </select>
-      <label for='password'>Password: </label>
-      <input type='password' id='password' maxlength='20'>
-      <label class='reg' for='optIn'>Yes, I want to subscribe to <br> receive updates: </label>
-      <input class='reg' type='checkbox' id='optIn'>
-      <br><br>
-      <button>Sign Up</button>
-  	 </div>
-     </div> -->
 
   <h3><strong>Register</strong></h3>
   {% from "includes/_formhelpers.html" import render_field %}
   <form method="POST" action="">
     <div class="form-group">
-      {{render_field(form.email, class_="form-control")}}
+      {{render_field(Register.email, class_="form-control")}}
     </div>
     <div class="form-group">
-      {{render_field(form.preferences, class_="form-control")}}
+      {{render_field(Register.preferences, class_="form-control")}}
     </div>
     <div class="form-group">
-      {{render_field(form.spanishLevel, class_="form-control")}}
+      {{render_field(Register.spanishLevel, class_="form-control")}}
     </div>
     <div class="form-group">
-      {{render_field(form.password, class_="form-control")}}
+      {{render_field(Register.password, class_="form-control")}}
     </div>
     <div class="form-group">
-      {{render_field(form.confirm, class_="form-control")}}
+      {{render_field(Register.confirm, class_="form-control")}}
     </div>
    <div class='text-center'>
-    <p><input type="submit" class="btn btn-primary text-center" value="Register"></p>
+    <p><input type="submit" class="btn btn-lg btn-primary text-center" value="Register"></p>
    </div>
   </form>
+  </div>
+  {% endif %}
+</div>
 
-    {% endif %}
+<div id="sampleChoice" class="jumbotron text-center" style="display:block"> 
+  <div class="container">
+  <h3><strong>Try a sample article</strong></h3>
+    <form onsubmit="getSamples();return false" id="sampleForm">
+        <label for="topic">Topic: </label><br>
+        <select class="form-control" id="topic" required>
+            <option selected disabled value="">Select a topic</option>          
+            <option value ='Sports'>Sports</option>
+            <option value ='News'>News</option>
+            <option value ='Politics'>Politics</option>
+            <option value ='Travel'>Travel</option>
+            <option value ='Tech'>Tech</option>
+            <option value ='Finance'>Finance</option>
+        </select><br>
+        <label for="diff">Difficulty: </label><br>
+        <select class="form-control" id="diff" required>
+            <option selected disabled value="">Select a difficulty</option>          
+            <option value ='Very Easy'>Very Easy</option>
+            <option value ='Easy'>Easy</option>
+            <option value ='Fairly Easy'>Fairly Easy</option>
+            <option value ='Standard'>Standard</option>
+            <option value ='Fairly Difficult'>Fairly Difficult</option>
+            <option value ='Difficult'>Difficult</option>
+            <option value ='Very Confusing'>Very Confusing</option>
+        </select><br>
+        <div class='text-center'>
+        <p><input type="submit" class="btn btn-lg btn-primary text-center" value="Get your article!"></p>
+      </div>
+    </form>
   </div>
 </div>
+
+
+<div id="sampleButton" class="jumbotron text-center" style="display:none"  onsubmit="resetSampleForm()">
+  <div class="container">
+  <form id="goToArticle" action="" target="_blank">
+     <div class='text-center'><br>
+      <p><input type="submit" class="btn btn-lg btn-primary text-center" value="Read your article!"></p>
+     </div>
+    </form>
+  </div>
+</div>
+
+<div style="display:none">
+      <span id='sampleStore'>{{samples}}</span>
+</div>
+
+<script>
+
+function getSamples() {
+  //grab data
+      var sampleData = document.getElementById("sampleStore").innerHTML;
+  //format data
+      //remove brackets
+      sampleData = sampleData.replaceAll("[{", "{")
+      sampleData = sampleData.replaceAll("}]", "}")
+
+      //split into arr on comma between Dicts ==> }, {
+      sampleArr = sampleData.split(/(?<!\"), /)
+      //convert into JSON
+      for (var i=0; i<sampleArr.length; i++) {
+        sampleArr[i] = JSON.parse(sampleArr[i])
+      };
+
+      var sampleTopic = document.getElementById("topic").value;
+      var sampleDiff = document.getElementById("diff").value;
+      var url = ""
+      document.getElementById("sampleForm").reset();
+
+      for (var i=0; i<sampleArr.length; i++) {
+        if (sampleArr[i]["diff"] == sampleDiff && sampleArr[i]["topic"] == sampleTopic) {
+          url = sampleArr[i]["Url"]
+          console.log(sampleArr[i])
+          break
+        }
+      }
+      //hide form; show article button
+      document.getElementById("sampleButton").style.display = "block";
+      document.getElementById("sampleChoice").style.display = "none";
+      document.getElementById("goToArticle").action = url;
+    return   
+}
+
+function resetSampleForm() {
+      document.getElementById("sampleButton").style.display = "none";
+      document.getElementById("sampleChoice").style.display = "block";
+      return
+}
+</script>
+
 {% endblock %}
