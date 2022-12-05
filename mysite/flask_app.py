@@ -136,7 +136,7 @@ def profile():
             print('exception occured')
 
 
-            
+
     # Close connection
     cur.close()
 
@@ -213,7 +213,7 @@ def login():
 @app.route('/unsubscribe/<token>')
 def unsubscribe(token):
     s = URLSafeSerializer(os.environ.get('SECRET_KEY'), salt='unsubscribe')
-    
+
     try:
         email = s.loads(token)
         print(email)
@@ -222,14 +222,14 @@ def unsubscribe(token):
             user=os.environ.get('DB_USER'),
             password=os.environ.get('DB_PASS'),
             database=os.environ.get('DB_NAME')
-            )   
-   
+            )
+
         # Create cursor
         cur = connection.cursor()
-    
+
         # Get uid
-        cur.execute("UPDATE users SET sendEmail = 0 WHERE email = %s", (email,))    
-        
+        cur.execute("UPDATE users SET sendEmail = 0 WHERE email = %s", (email,))
+
         # Commit to DB
         connection.commit()
         flash('You are now unsubscribed', 'info')
