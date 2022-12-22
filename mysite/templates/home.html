@@ -65,17 +65,6 @@
   </div>
 </div>
 
-
-<div id="sampleButton" class="jumbotron text-center" style="display:none"  onsubmit="resetSampleForm()">
-  <div class="container">
-  <form id="goToArticle" action="" target="_blank">
-     <div class='text-center'><br>
-      <p><input type="submit" class="btn btn-lg btn-primary text-center" value="Read your article!"></p>
-     </div>
-    </form>
-  </div>
-</div>
-
 <div style="display:none">
       <span id='sampleStore'>{{samples}}</span>
 </div>
@@ -109,10 +98,10 @@ function getSamples() {
           break
         }
       }
-      //hide form; show article button
-      document.getElementById("sampleButton").style.display = "block";
-      document.getElementById("sampleChoice").style.display = "none";
-      document.getElementById("goToArticle").action = url;
+
+      window.open(url, '_blank')
+
+      resetSampleForm()
     return   
 }
 
