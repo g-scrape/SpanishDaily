@@ -48,7 +48,10 @@ def sendVerificationEmail(recipient):
             msg['From'] = EMAIL_ADDRESS
             msg['TO'] = recipient
 
-            text = "Sorry! I haven't created a plaintext template yet :/"
+            with open('plaintext_verify_template.txt') as f:
+                text = f.read()
+                text = text.replace("{{token}}", token)
+                
             with open('verify_template.html') as f:
                 html = f.read()
                 html = html.replace("{{token}}", token)
