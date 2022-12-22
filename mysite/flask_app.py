@@ -8,6 +8,7 @@ import os
 from itsdangerous import URLSafeSerializer, BadData
 import json
 from verifyEmail import sendVerificationEmail
+from datetime import date
 
 #grab envVars locally or in prod
 path = ''
@@ -55,7 +56,8 @@ def index():
             return redirect(url_for('login'))
 
         # Execute query
-        cur.execute("INSERT INTO users(email, password, spanishLevel, sendEmail, verifiedEmail) VALUES(%s, %s, %s, %s, %s)", (email, password, spanishLevel, 0, 0))
+        today = date.today()        
+        cur.execute("INSERT INTO users(email, password, spanishLevel, sendEmail, signupDate, verifiedEmail) VALUES(%s, %s, %s, %s, %s, %s)", (email, password, spanishLevel, 0, today, 0))
         cur.execute("SELECT userId FROM users WHERE email = %s", [email])
 
         #idk, the fetchall returns a tuple inside a list so need to index the FK int
