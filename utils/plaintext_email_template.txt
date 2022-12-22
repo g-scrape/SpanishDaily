@@ -1,0 +1,8 @@
+Hi there,
+
+Please use the following link to access your article of the day!
+
+{{url}}
+
+Want to unsubscribe?
+Use this URL: https://www.readspanishdaily.com/unsubscribe/{{token}}

@@ -1,0 +1,7 @@
+Hi there,
+
+Please follow this URL to verify your email: https://www.readspanishdaily.com/verify/{{token}}
+
+This email is not monitored, replies will not be returned.
+
+If you did not sign up for SpanishDaily you can ignore this email and the account will be deleted.

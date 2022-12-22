@@ -57,7 +57,11 @@ def sendEmail(url, diff, topic, recipients):
                     msg['From'] = EMAIL_ADDRESS
                     msg['TO'] = email
                     
-                    text = "Sorry! I haven't created a plaintext template yet :/"
+                    with open('utils/plaintext_email_template.txt') as f:
+                        text = f.read()
+                        text = text.replace("{{url}}", url)
+                        text = text.replace("{{token}}", token)
+
                     with open('utils/email_template.html') as f:
                         html = f.read()
                         html = html.replace("{{url}}", url)
