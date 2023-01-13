@@ -36,12 +36,12 @@ cur.execute(selectQuery)
 #get number of eligible users
 numDeleted = len(cur.fetchall())
 
-if numDeleted > 1:
+if numDeleted > 0:
     #delete users
     deleteQuery = f"DELETE FROM users WHERE signupDate < '{weekAgo}' and verifiedEmail = 0"
     cur.execute(deleteQuery)
-    
+
     connection.commit()
-    
-    print(str(numDeleted) + " accounts deleted due to being unverified")
+
+print(str(numDeleted) + " accounts deleted due to being unverified")
 
