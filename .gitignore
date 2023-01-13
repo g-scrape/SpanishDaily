@@ -159,3 +159,4 @@ bare-repos/mysit.git
 .vimrc
 .viminfo
 README.txt
+.my.cnf
