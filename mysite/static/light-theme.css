@@ -86,6 +86,8 @@ button {
   right: 0;
   bottom: 0;
   background-color: #ccc;
+/*  background-image:url('/static/sun2.png');*/
+
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -97,7 +99,9 @@ button {
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-image:url('/static/sun2.png');
+  background-size:contain;
+  background-position:center; 
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -114,6 +118,7 @@ input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
+
 }
 
 /* Rounded sliders */
@@ -126,5 +131,9 @@ input:checked + .slider:before {
 }
 
 .theme-toggle {
-	padding-top: 10px;
+	position: fixed;
+	top:0;
+	right:0;
+	padding-top: 60px;
+	padding-right: 30px;
 }
