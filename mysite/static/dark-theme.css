@@ -1,0 +1,229 @@
+/* Change the background color of the body */
+body {
+    background-color: #333333;
+    color: #babcbf;
+}
+
+/* Change the background color of the navbar */
+.navbar {
+    background-color: #222222;
+}
+
+/* Change the color of navbar Spanish Daily button */
+.navbar.navbar-default a {
+    color: #babcbf;
+}
+
+
+/* Change the color of the active Spanish Daily button */
+.navbar.navbar-default.active a {
+    background-color: #fc0303;
+}
+
+/* Change the color of navbar text and links, home/about/login */
+.collapse.navbar-collapse.links a {
+    color: #babcbf;
+}
+
+.collapse.navbar-collapse.links.active a {
+    color: #f8f9fa;
+    background-color: #222222;
+}
+
+
+/* Change the background color of the jumbotron */
+.jumbotron {
+    background-color: #222222;
+    color: #babcbf;
+}
+
+
+/* Change the background color of input fields */
+.form-group input {
+    background-color: #333333;
+    color: #babcbf;
+    border-color: #f8f9fa;
+}
+
+.form-group select {
+    background-color: #333333;
+    color: #babcbf;
+    border-color: #f8f9fa;
+}
+
+#sampleForm select {
+    background-color: #333333;
+    color: #babcbf;
+    border-color: #f8f9fa;	
+}
+
+
+/* Change the color of labels */
+label {
+    color: #f8f9fa;
+}
+
+/* Change the color of placeholder text */
+::placeholder {
+    color: #f8f9fa;
+}
+
+/* Change the color of form validation states */
+.form-control:valid,
+.form-control:valid:focus {
+    border-color: #f8f9fa;
+    box-shadow: none;
+}
+
+.form-control:invalid,
+.form-control:invalid:focus {
+    border-color: #f8f9fa;
+    box-shadow: none;
+}
+
+
+
+div.form {
+    display:grid;
+	justify-content: center;
+	align-content: center;
+    grid-template-columns: max-content max-content;
+    grid-gap:10px;
+    padding-top: 10px;
+    width: 100%;
+    padding-right: 20%;
+}
+
+a.form{
+	width: 150%;
+}
+
+li.list-group-item {
+	width: 60%;
+	}
+
+input {
+	width: 100%;
+
+}
+input.pref {
+	display:block;
+	margin-right:0;
+	margin-left:auto;
+
+	}
+
+input[type=checkbox]{
+	display: inline-block;
+	float: right;
+	width:10%;
+}
+
+input[type=radio]{
+	display: inline-block;
+	float: right;
+	width:10%;
+}
+
+div.form label { 
+	text-align:right;
+	word-wrap: break-word;
+	min-width: 0;
+ }
+
+
+button {
+	background-color: #008CBA;
+	color: white;
+	border-radius: 6px;
+}
+
+
+.container {
+/*	display: flex;
+	flex-wrap: wrap;*/
+	text-align: left;
+}
+
+.navcontainer {
+	text-align: left;
+}
+
+.btn {
+	width: 40%;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 90%;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-image:url('/static/moon2.png');
+  background-size:contain;
+  background-position:center;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.theme-toggle {
+	position: fixed;
+	top:0;
+	right:0;
+	margin-top: 60px;
+	margin-right: 30px;
+}

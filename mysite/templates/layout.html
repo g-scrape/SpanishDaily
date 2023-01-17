@@ -4,11 +4,37 @@
     <meta charset="utf-8">
     <title>Spanish Daily</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel='stylesheet' href='/static/stylesheet.css'>
-    <script src="jquery-3.6.1.min.js"></script>
+    <link id="stylesheet" rel='stylesheet' href='/static/light-theme.css'>
+    <script src="jquery-3.6.1.min.js">
+
+    </script>
   </head>
   <body>
+
+    <script>
+      const stylesheet = document.getElementById("stylesheet");
+
+      // Check if the theme is already saved in local storage
+      const currentTheme = localStorage.getItem("theme");
+
+      //set theme to match local local storage 
+      if (currentTheme && currentTheme.includes("light")) {
+        stylesheet.href = "/static/light-theme.css";
+        localStorage.setItem("theme", "/static/light-theme.css");
+      } else if (currentTheme && currentTheme.includes("dark")) {
+        stylesheet.href = "/static/dark-theme.css";
+        localStorage.setItem("theme", "/static/dark-theme.css");
+      }
+
+    </script>
     {% include 'includes/_navbar.html' %}
+      <div class='theme-toggle'>
+          <!-- Rounded switch -->
+        <label class="switch">
+          <input id="toggle-button" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </div>
     <div class="container">
       {% include 'includes/_messages.html' %}
       {% block body %}{% endblock %}
@@ -18,7 +44,39 @@
     <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
     <script src="jquery-3.6.1.min.js"></script>
     <script type="text/javascript">
-      CKEDITOR.replace('editor')
+      // CKEDITOR.replace('editor')
+
+    const toggleButton = document.getElementById("toggle-button");
+    const stylesheetToggle = document.getElementById("stylesheet");
+
+    // Check if the theme is already saved in local storage
+    const currentThemeToggle = localStorage.getItem("theme");
+
+      // if theme is saved in local storage ,set it accordingly
+      if (currentThemeToggle) {
+        stylesheetToggle.href = currentThemeToggle;
+        if (currentThemeToggle.includes("light")) {
+          toggleButton.checked = false
+        } else {
+          toggleButton.checked = true
+        }
+      }
+
+    // Create a function to toggle the theme
+    function toggleTheme() {
+      console.log('here')
+      if (stylesheetToggle.href.includes("light")) {
+        stylesheetToggle.href = "/static/dark-theme.css";
+        localStorage.setItem("theme", "/static/dark-theme.css");
+      } else {
+        stylesheetToggle.href = "/static/light-theme.css";
+        localStorage.setItem("theme", "/static/light-theme.css");
+      }
+    };
+
+    // Attach the toggle function to the toggle button
+    toggleButton.addEventListener("click", toggleTheme);
+
     </script>
   </body>
 </html>
