@@ -1,31 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<!--   <div class="jumbotron container text-center">
-
-    <div class="col-md-6">
-    <h2 class='text-center'>Current Genre</h2>
-    <ul class="list-group">
-      <li class="list-group-item h2 text-center center-block">{{preference}}</li>
-    </ul>
-	</div>
-  <form method="POST" action="">
-	<div class="col-md-6">
-	<h2 class='text-center'>Available Genres</h2>
-     <ul class="list-group">
-      {% for item in genres %}
-      <li class="list-group-item text-left center-block">{{item}}<input type='radio' name='genreChoice' value='{{item}}' required></li>
-      {% endfor %}
-    </ul>
-    </div>
-    <p><input type="submit" class="btn btn-primary" value="Update Preference"></p>
-  </form>
-  </div> -->
-<!-- add user profile and ability to update preferences -->
-
 <div class="jumbotron container text-center">
 
-  <div class="col-md-6">
+<div class="row">
+  <div class="col-md-6 display-flex-center">
     <h2 class='text-center'>Current Genre</h2>
     <ul class="list-group">
       <li class="list-group-item h2 text-center center-block">{{preference}}</li>
@@ -39,12 +18,12 @@
       {% endfor %}
     </ul>
     
-    <p><input type="submit" class="btn btn-primary" value="Update Preference"></p>
+    <p class='col text-center'><input type="submit" name="genreSubmit" class="btn btn-primary" value="Update Preference"></p>
   </form>
   </div>
 
-  <div class="col-md-6">
-    <h2 class='text-center'>Selected Difficulty</h2>
+  <div class="col-md-6 display-flex-center">
+    <h2 class='text-center'>Current Difficulty</h2>
     <ul class="list-group">
       <li class="list-group-item h2 text-center center-block">{{difficulty}}</li>
     </ul>
@@ -53,15 +32,17 @@
   <h2 class='text-center'>Difficulty Options</h2>
      <ul class="list-group">
       {% for diff in difficulties %}
-      <li class="list-group-item text-left center-block">{{diff}}<input type='radio' name='diffeChoice' value='{{diff}}' required></li>
+      <li class="list-group-item text-left center-block">{{diff}}<input type='radio' name='diffChoice' value='{{diff}}' required></li>
       {% endfor %}
     </ul>
     
-    <p><input type="submit" class="btn btn-primary" value="Update Difficulty"></p>
+    <p class='col text-center'><input type="submit" name="diffSubmit" class="btn btn-primary" value="Update Difficulty"></p>
   </form>
-  </div>  
+  </div> 
+  </div> 
+  <div class="row">
+
+  </div>
 </div>
-
-
 
 {% endblock %}

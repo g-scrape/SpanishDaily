@@ -9,6 +9,7 @@ from itsdangerous import URLSafeSerializer, BadData
 import json
 from verifyEmail import sendVerificationEmail
 from datetime import date
+from werkzeug.datastructures import ImmutableMultiDict
 
 #grab envVars locally or in prod
 path = ''
@@ -130,10 +131,11 @@ def profile():
     genres.remove(preference)
     difficulties.remove(difficulty)
 
+
 # =============================================================================
 #     if request.method == 'POST':
 # #        try:
-#             # Get users selected genre
+#             # Get users selected genre / diff
 #             updateChoice = request.form['genreChoice']
 #             #reset preference to the selected choice
 #             preference = updateChoice
@@ -146,6 +148,34 @@ def profile():
 # #            print('exception occured')
 # =============================================================================
 
+    if request.method == 'POST':
+
+            form = request.form
+            print(form)
+        #try:
+            if form.get('genreChoice') is not None: 
+                # Get users selected genre
+                updateChoice = form.get('genreChoice')
+                #reset preference to the selected choice
+                preference = updateChoice
+                # Update user's preferences with their selection
+                cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
+                # Commit to DB
+                connection.commit()
+                flash('Preference updated to: ' + updateChoice, 'success')
+            elif form.get('diffChoice') is not None:
+                # Get users selected diff
+                updateDiff = form.get('diffChoice')
+                #reset preference to the selected choice
+                difficulty = updateDiff
+                # Update user's preferences with their selection
+                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (difficulty, uid))
+                # Commit to DB
+                connection.commit()
+                flash('Difficulty updated to: ' + updateDiff, 'success')                
+
+        #except:
+            #print('exception occured')
 
 
     # Close connection
