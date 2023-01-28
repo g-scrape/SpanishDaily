@@ -9,6 +9,7 @@ from itsdangerous import URLSafeSerializer, BadData
 import json
 from verifyEmail import sendVerificationEmail
 from datetime import date
+from werkzeug.datastructures import ImmutableMultiDict
 
 #grab envVars locally or in prod
 path = ''
@@ -102,8 +103,9 @@ def profile():
         password=os.environ.get('DB_PASS'),
         database=os.environ.get('DB_NAME')
         )
-    #declare all genres
+    #declare all genres + diffs
     genres = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
+    difficulties = ['Very Easy', 'Easy', 'Fairly Easy', 'Standard', 'Fairly Difficult', 'Difficult', 'Very Confusing']
 
     # Create cursor
     cur = connection.cursor(buffered=True, dictionary=True)
@@ -119,24 +121,61 @@ def profile():
     cur.execute("SELECT preference FROM preferences WHERE userId = %s", [uid])
     preference = cur.fetchone()
     preference = preference['preference']
+    
+    #Pull difficulty based on uid
+    cur.execute("SELECT spanishLevel FROM users WHERE userId = %s", [uid])
+    difficulty = cur.fetchone()
+    difficulty = difficulty['spanishLevel']    
 
     #loop through preferences to determine which are selected vs not
     genres.remove(preference)
+    difficulties.remove(difficulty)
+
+
+# =============================================================================
+#     if request.method == 'POST':
+# #        try:
+#             # Get users selected genre / diff
+#             updateChoice = request.form['genreChoice']
+#             #reset preference to the selected choice
+#             preference = updateChoice
+#             # Update user's preferences with their selection
+#             cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
+#             # Commit to DB
+#             connection.commit()
+#             flash('Preference updated to: ' + updateChoice, 'success')
+# #        except:
+# #            print('exception occured')
+# =============================================================================
 
     if request.method == 'POST':
-        try:
-            # Get users selected genre
-            updateChoice = request.form['genreChoice']
-            #reset preference to the selected choice
-            preference = updateChoice
-            # Update user's preferences with their selection
-            cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
-            # Commit to DB
-            connection.commit()
-            flash('Preference updated to: ' + updateChoice, 'success')
-        except:
-            print('exception occured')
 
+            form = request.form
+            print(form)
+        #try:
+            if form.get('genreChoice') is not None: 
+                # Get users selected genre
+                updateChoice = form.get('genreChoice')
+                #reset preference to the selected choice
+                preference = updateChoice
+                # Update user's preferences with their selection
+                cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
+                # Commit to DB
+                connection.commit()
+                flash('Preference updated to: ' + updateChoice, 'success')
+            elif form.get('diffChoice') is not None:
+                # Get users selected diff
+                updateDiff = form.get('diffChoice')
+                #reset preference to the selected choice
+                difficulty = updateDiff
+                # Update user's preferences with their selection
+                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (difficulty, uid))
+                # Commit to DB
+                connection.commit()
+                flash('Difficulty updated to: ' + updateDiff, 'success')                
+
+        #except:
+            #print('exception occured')
 
 
     # Close connection
@@ -144,7 +183,7 @@ def profile():
 
     #preferences = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
 
-    return render_template('profile.html', preference=preference, genres=genres)
+    return render_template('profile.html', preference=preference, genres=genres, difficulty=difficulty, difficulties=difficulties)
 
 
 
