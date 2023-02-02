@@ -58,12 +58,11 @@ def evaluateDifficulty(urls):
     return difficulty
 
 
-#function to assign human readable difficulty level and obtain the 'easiest' mesaured article.
-#collecting easiest article in case no easy or very easy articles returned
-#probably should do the same for difficulty...
+#function to assign human readable difficulty level and stack rank articles by diff
+#collecting easiest article in case no easy articles returned
 def sortUrlsByDiff(articles):
     count = 0
-    urlDict = {'Very Confusing': [], 'Difficult': [], 'Fairly Difficult': [],'Standard': [],'Fairly Easy':[], 'Easy': [],'Very Easy':[]}
+    urlDict = {'Fluent': [], 'Difficult': [],'Standard': [], 'Easy': []}
     difficulty = []
     while count < (len(articles) - 1) and any(n == [] for n in urlDict.values()):
 
@@ -79,19 +78,13 @@ def sortUrlsByDiff(articles):
                     urlRank = [url, rating]
                     difficulty.append(urlRank)
                     if rating < 30:
-                        urlDict['Very Confusing'].append(url)
+                        urlDict['Fluent'].append(url)
                     elif rating < 50:
                         urlDict['Difficult'].append(url)
-                    elif rating < 60:
-                        urlDict['Fairly Difficult'].append(url)
                     elif rating < 70:
                         urlDict['Standard'].append(url)
-                    elif rating < 80:
-                        urlDict['Fairly Easy'].append(url)
-                    elif rating <= 90:
+                    elif rating >= 70:
                         urlDict['Easy'].append(url)
-                    elif rating > 90:
-                        urlDict['Very Easy'].append(url)
                     print('Assigned: ' + str(rating))
                     count += 1
                 else:
@@ -120,29 +113,23 @@ def trimUrlList(results):
     hardestArticleRating = hardestArticle[1]
 
     #assign difficulty rating
-    if easiestArticleRating > 90:
-        easiestArticleRating = 'Very Easy'
-    elif easiestArticleRating > 80:
+    if easiestArticleRating > 70:
         easiestArticleRating = 'Easy'
-    elif easiestArticleRating > 70:
-        easiestArticleRating = 'Fairly Easy'
-    elif easiestArticleRating > 60:
-        easiestArticleRating = 'Standard'
     elif easiestArticleRating > 50:
-        easiestArticleRating = 'Fairly Difficult'
+        easiestArticleRating = 'Standard'
     elif easiestArticleRating > 30:
         easiestArticleRating = 'Difficult'
     elif easiestArticleRating <= 30:
-        easiestArticleRating = 'Very Confusing'
+        easiestArticleRating = 'Fluent'
 
     #assign only a single URL per diff rating. Also assigns closest URL for unmatched hard or easy ratings
     for key, value in urlDict.items():
         if len(value) > 0:
             urlDict[key] = value[0]
         elif len(value) == 0:
-            if key == 'Very Easy' or key == 'Easy' or key == 'Fairly Easy' or key == 'Standard':
+            if key == 'Easy' or key == 'Standard':
                 urlDict[key] = [easiestArticleUrl, easiestArticleRating] #need to account for this len == 2 situation if no article found
-            elif key == 'Fairly Difficult' or key == 'Difficult' or key == 'Very Confusing':
+            elif key == 'Difficult' or key == 'Fluent':
                 urlDict[key] = [hardestArticleUrl, hardestArticleRating] #need to account for this len == 2 situation if no article found
     return urlDict
 
@@ -232,7 +219,7 @@ def sendEmails(urlDict, topic):
      ##SELECT email, spanishLevel, preference FROM users INNER JOIN preferences ON users.userId=preferences.preference WHERE preferences.preference = %s
 
      #topics = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
-    diffs = ['Very Easy', 'Easy', 'Fairly Easy', 'Standard', 'Fairly Difficult', 'Difficult', 'Very Confusing']
+    diffs = ['Easy', 'Standard', 'Difficult', 'Fluent']
 
     print('urlDict: ')
     print(urlDict)

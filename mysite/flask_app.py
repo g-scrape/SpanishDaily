@@ -105,7 +105,7 @@ def profile():
         )
     #declare all genres + diffs
     genres = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
-    difficulties = ['Very Easy', 'Easy', 'Fairly Easy', 'Standard', 'Fairly Difficult', 'Difficult', 'Very Confusing']
+    difficulties = ['Easy', 'Standard', 'Difficult', 'Fluent']
 
     # Create cursor
     cur = connection.cursor(buffered=True, dictionary=True)
@@ -188,7 +188,7 @@ class RegisterForm(Form):
         validators.Length(min=6, max=50)])
     preferences = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
 
-    spanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])
+    spanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Easy', 'Easy'), ('Standard', 'Standard'), ('Difficult', 'Difficult'), ('Fluent', 'Fluent')])
 
     password = PasswordField('Password', [
         validators.DataRequired(),
@@ -200,7 +200,7 @@ class RegisterForm(Form):
 class SampleArticle(Form):
     samplePreference = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
 
-    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])    
+    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Easy', 'Easy'), ('Standard', 'Standard'), ('Difficult', 'Difficult'), ('Fluent', 'Fluent')])    
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
