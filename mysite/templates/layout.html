@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name=”viewport” content="width=device-width, initial-scale=1.0">
     <title>Spanish Daily</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link id="stylesheet" rel='stylesheet' href='/static/light-theme.css'>
@@ -70,14 +71,16 @@
 
 //code for profile subscription toggle
   $('#toggle-sub').change(function() {
+
+    console.log('here')
+    if (this.checked) {
+      // alert('You are subscribed!')
+      
+    } else if (!this.checked) {
+      // alert('You have un-subcribed. Your account will be deleted in 30 days if you do not re-subscribe.')
+    }
+
     $('#subForm').submit();
-    // console.log('here')
-    // if (this.checked) {
-    //   alert('You are subscribed!')
-    // } else if (!this.checked) {
-    //   alert('You have un-subcribed. Your account will be deleted in 30 days if you do not re-subscribe.')
-    // }
-    
     console.log('form submitted')
   });
 
