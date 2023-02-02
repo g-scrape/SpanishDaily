@@ -49,7 +49,7 @@ print(str(numDeleted) + " accounts deleted due to being unverified")
 
 #get today's date
 today = date.today()
-#get a week ago
+#get a month ago
 monthAgo = today - datetime.timedelta(days=30)
 
 #count and log number of users eligble for deletion
