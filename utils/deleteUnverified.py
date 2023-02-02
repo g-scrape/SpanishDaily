@@ -45,3 +45,25 @@ if numDeleted > 0:
 
 print(str(numDeleted) + " accounts deleted due to being unverified")
 
+## do it again for the un-subbed users
+
+#get today's date
+today = date.today()
+#get a week ago
+monthAgo = today - datetime.timedelta(days=30)
+
+#count and log number of users eligble for deletion
+selectQuery = f"SELECT userId from users WHERE subChangeDate < '{monthAgo}' and sendEmail = 0"
+
+cur.execute(selectQuery)
+#get number of eligible users
+numDeleted = len(cur.fetchall())
+
+if numDeleted > 0:
+    #delete users
+    deleteQuery = f"DELETE FROM users WHERE subChangeDate < '{monthAgo}' and sendEmail = 0"
+    cur.execute(deleteQuery)
+
+    connection.commit()
+
+print(str(numDeleted) + " accounts deleted due to being unsubscribed")
