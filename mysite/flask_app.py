@@ -105,7 +105,7 @@ def profile():
         )
     #declare all genres + diffs
     genres = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
-    difficulties = ['Very Easy', 'Easy', 'Fairly Easy', 'Standard', 'Fairly Difficult', 'Difficult', 'Very Confusing']
+    difficulties = ['Easy', 'Standard', 'Difficult', 'Fluent']
 
     # Create cursor
     cur = connection.cursor(buffered=True, dictionary=True)
@@ -131,33 +131,20 @@ def profile():
     genres.remove(preference)
     difficulties.remove(difficulty)
 
-
-# =============================================================================
-#     if request.method == 'POST':
-# #        try:
-#             # Get users selected genre / diff
-#             updateChoice = request.form['genreChoice']
-#             #reset preference to the selected choice
-#             preference = updateChoice
-#             # Update user's preferences with their selection
-#             cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
-#             # Commit to DB
-#             connection.commit()
-#             flash('Preference updated to: ' + updateChoice, 'success')
-# #        except:
-# #            print('exception occured')
-# =============================================================================
+    updateChoice = ""
+    updateDiff = ""
 
     if request.method == 'POST':
-
-            form = request.form
-            print(form)
-        #try:
+        form = request.form
+        print(form)
+        try:
             if form.get('genreChoice') is not None: 
                 # Get users selected genre
                 updateChoice = form.get('genreChoice')
-                #reset preference to the selected choice
-                preference = updateChoice
+                #reset genres to the selected choice
+                # preference = updateChoice
+                genres.append(preference)
+                genres.remove(updateChoice)
                 # Update user's preferences with their selection
                 cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
                 # Commit to DB
@@ -167,16 +154,23 @@ def profile():
                 # Get users selected diff
                 updateDiff = form.get('diffChoice')
                 #reset preference to the selected choice
-                difficulty = updateDiff
+                # difficulty = updateDiff
+                difficulties.append(difficulty)
+                difficulties.remove(updateDiff)                
                 # Update user's preferences with their selection
-                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (difficulty, uid))
+                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (updateDiff, uid))
                 # Commit to DB
                 connection.commit()
                 flash('Difficulty updated to: ' + updateDiff, 'success')                
+        except:
+            print('exception occured')
 
-        #except:
-            #print('exception occured')
-
+#update the variables to pass to the webpage if they are changed
+    if len(updateChoice) > 0:
+        preference = updateChoice
+    
+    if len(updateDiff) > 0:
+        difficulty = updateDiff
 
     # Close connection
     cur.close()
@@ -194,7 +188,7 @@ class RegisterForm(Form):
         validators.Length(min=6, max=50)])
     preferences = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
 
-    spanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])
+    spanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Easy', 'Easy'), ('Standard', 'Standard'), ('Difficult', 'Difficult'), ('Fluent', 'Fluent')])
 
     password = PasswordField('Password', [
         validators.DataRequired(),
@@ -206,7 +200,7 @@ class RegisterForm(Form):
 class SampleArticle(Form):
     samplePreference = SelectField('Preferred Article Topic', choices=[(None, '---'), ('Sports', 'Sports'), ('News', 'News'), ('Politics', 'Politics'), ('Travel', 'Travel'), ('Tech','Tech'), ('Finance','Finance')])
 
-    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Very Easy','Very Easy'), ('Easy', 'Easy'), ('Fairly Easy', 'Fairly Easy'), ('Standard', 'Standard'), ('Fairly Difficult', 'Fairly Difficult'), ('Difficult', 'Difficult'), ('Very Difficult', 'Very Difficult')])    
+    sampleSpanishLevel = SelectField('Article Difficulty Level', choices=[(None, '---'), ('Easy', 'Easy'), ('Standard', 'Standard'), ('Difficult', 'Difficult'), ('Fluent', 'Fluent')])    
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
