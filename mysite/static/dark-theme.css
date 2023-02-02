@@ -225,3 +225,71 @@ input:checked + .slider:before {
 	margin-top: 7px;
 	margin-left: 7px;
 }
+
+/* CSS for sub toggle on /profile /
+
+/* Rounded sliders */
+.subSlider.round {
+  border-radius: 50px;
+}
+
+.subSlider.round:before {
+  border-radius: 70%;
+}
+
+/* The switch - the box around the slider */
+.subSwitch {
+  position: relative;
+  display: inline-block;
+  width: 120px;
+  height: 50px;
+}
+
+/* The slider */
+.subSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.subSlider:before {
+  position: absolute;
+  content: "";
+  height: 42px;
+  width: 42px;
+  left: 4px;
+  bottom: 4px;
+  background-image:url('/static/stop.png');
+  background-size:contain;
+  background-position:center;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+
+input:checked + .subSlider {
+  background-color: #b7e1cd;
+  
+}
+
+input:focus + .subSlider {
+  box-shadow: 0 0 1px #f4c7c3;
+
+}
+
+input:checked + .subSlider:before {
+  -webkit-transform: translateX(70px);
+  -ms-transform: translateX(70px);
+  transform: translateX(70px);
+  background-image:url('/static/play-button.png');
+}
+
+#toggle-sub {
+	display: none;
+}

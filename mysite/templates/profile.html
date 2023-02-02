@@ -3,6 +3,21 @@
 {% block body %}
 <div class="jumbotron container text-center">
 
+
+  <div class="row">
+    <div class='col-md-3'>
+    </div>    
+    <div class='col-md-6 text-center'>
+      <form id='subForm' method="POST" action="">
+        <h2>Subscription Status:</h2>              
+        <label class="subSwitch">
+          <input id="toggle-sub" type="checkbox" name="subChoice" {{check}}>
+          <span class="subSlider round"></span>
+        </label>
+      </form>
+    </div>
+  </div>
+
 <div class="row">
   <div class="col-md-6 display-flex-center">
     <h2 class='text-center'>Current Genre</h2>
@@ -40,9 +55,7 @@
   </form>
   </div> 
   </div> 
-  <div class="row">
 
-  </div>
 </div>
 
 {% endblock %}
