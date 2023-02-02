@@ -131,33 +131,20 @@ def profile():
     genres.remove(preference)
     difficulties.remove(difficulty)
 
-
-# =============================================================================
-#     if request.method == 'POST':
-# #        try:
-#             # Get users selected genre / diff
-#             updateChoice = request.form['genreChoice']
-#             #reset preference to the selected choice
-#             preference = updateChoice
-#             # Update user's preferences with their selection
-#             cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
-#             # Commit to DB
-#             connection.commit()
-#             flash('Preference updated to: ' + updateChoice, 'success')
-# #        except:
-# #            print('exception occured')
-# =============================================================================
+    updateChoice = ""
+    updateDiff = ""
 
     if request.method == 'POST':
-
-            form = request.form
-            print(form)
-        #try:
+        form = request.form
+        print(form)
+        try:
             if form.get('genreChoice') is not None: 
                 # Get users selected genre
                 updateChoice = form.get('genreChoice')
-                #reset preference to the selected choice
-                preference = updateChoice
+                #reset genres to the selected choice
+                # preference = updateChoice
+                genres.append(preference)
+                genres.remove(updateChoice)
                 # Update user's preferences with their selection
                 cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
                 # Commit to DB
@@ -167,16 +154,23 @@ def profile():
                 # Get users selected diff
                 updateDiff = form.get('diffChoice')
                 #reset preference to the selected choice
-                difficulty = updateDiff
+                # difficulty = updateDiff
+                difficulties.append(difficulty)
+                difficulties.remove(updateDiff)                
                 # Update user's preferences with their selection
-                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (difficulty, uid))
+                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (updateDiff, uid))
                 # Commit to DB
                 connection.commit()
                 flash('Difficulty updated to: ' + updateDiff, 'success')                
+        except:
+            print('exception occured')
 
-        #except:
-            #print('exception occured')
-
+#update the variables to pass to the webpage if they are changed
+    if len(updateChoice) > 0:
+        preference = updateChoice
+    
+    if len(updateDiff) > 0:
+        difficulty = updateDiff
 
     # Close connection
     cur.close()
