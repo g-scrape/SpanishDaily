@@ -125,7 +125,16 @@ def profile():
     #Pull difficulty based on uid
     cur.execute("SELECT spanishLevel FROM users WHERE userId = %s", [uid])
     difficulty = cur.fetchone()
-    difficulty = difficulty['spanishLevel']    
+    difficulty = difficulty['spanishLevel']  
+    
+    #Pull sub preference based on uid
+    cur.execute("SELECT sendEmail FROM users WHERE userId = %s", [uid])
+    subStatus = cur.fetchone()
+    subStatus = subStatus['sendEmail']
+    if subStatus == 1:
+        check = "checked"
+    elif subStatus == 0:
+        check = ""
 
     #loop through preferences to determine which are selected vs not
     genres.remove(preference)
@@ -137,33 +146,51 @@ def profile():
     if request.method == 'POST':
         form = request.form
         print(form)
-        try:
-            if form.get('genreChoice') is not None: 
-                # Get users selected genre
-                updateChoice = form.get('genreChoice')
-                #reset genres to the selected choice
-                # preference = updateChoice
-                genres.append(preference)
-                genres.remove(updateChoice)
-                # Update user's preferences with their selection
-                cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
-                # Commit to DB
-                connection.commit()
-                flash('Preference updated to: ' + updateChoice, 'success')
-            elif form.get('diffChoice') is not None:
-                # Get users selected diff
-                updateDiff = form.get('diffChoice')
-                #reset preference to the selected choice
-                # difficulty = updateDiff
-                difficulties.append(difficulty)
-                difficulties.remove(updateDiff)                
-                # Update user's preferences with their selection
-                cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (updateDiff, uid))
-                # Commit to DB
-                connection.commit()
-                flash('Difficulty updated to: ' + updateDiff, 'success')                
-        except:
-            print('exception occured')
+        # try:
+        if form.get('genreChoice') is not None: 
+            # Get users selected genre
+            updateChoice = form.get('genreChoice')
+            #reset genres to the selected choice
+            # preference = updateChoice
+            genres.append(preference)
+            genres.remove(updateChoice)
+            # Update user's preferences with their selection
+            cur.execute("UPDATE preferences SET preference = %s WHERE userId = %s", (updateChoice, uid))
+            # Commit to DB
+            connection.commit()
+            flash('Preference updated to: ' + updateChoice, 'success')
+        elif form.get('diffChoice') is not None:
+            # Get users selected diff
+            updateDiff = form.get('diffChoice')
+            #reset preference to the selected choice
+            # difficulty = updateDiff
+            difficulties.append(difficulty)
+            difficulties.remove(updateDiff)                
+            # Update user's preferences with their selection
+            cur.execute("UPDATE users SET spanishLevel = %s WHERE userId = %s", (updateDiff, uid))
+            # Commit to DB
+            connection.commit()
+            flash('Difficulty updated to: ' + updateDiff, 'success')
+        #if subscription edit, make the appropriate changes
+        elif form.get('subChoice') is not None or type(form) == ImmutableMultiDict:
+            print('substatus: ' + str(subStatus))
+            #reverses legacy sub status to match the update
+            if subStatus == 1:
+                subStatus = 0
+                check = ""
+                unSubDate = date.today()
+                flash('You have un-subcribed. Your account will be deleted in 30 days if you do not re-subscribe!', 'warning')
+            elif subStatus == 0:
+                subStatus = 1
+                check = "checked"
+                unSubDate = '9999-12-31'
+                flash('You are subscribed!', 'success')
+            # Update user's sendEmail with their selection
+            cur.execute("UPDATE users SET sendEmail = %s, subChangeDate = %s WHERE userId = %s", (subStatus, unSubDate, uid))
+            # Commit to DB
+            connection.commit()
+        # except:
+        #     print('exception occured')
 
 #update the variables to pass to the webpage if they are changed
     if len(updateChoice) > 0:
@@ -177,7 +204,7 @@ def profile():
 
     #preferences = ['Sports', 'News', 'Politics', 'Travel', 'Tech', 'Finance']
 
-    return render_template('profile.html', preference=preference, genres=genres, difficulty=difficulty, difficulties=difficulties)
+    return render_template('profile.html', preference=preference, genres=genres, difficulty=difficulty, difficulties=difficulties, check=check)
 
 
 
