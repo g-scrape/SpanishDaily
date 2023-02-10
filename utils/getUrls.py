@@ -24,7 +24,7 @@ def getNewsUrls(subject):
            'language=es&'
            'from='+date+'&'
            'sortBy=popularity&'
-           'apiKey=' + os.enviorn.get('NEWS_API'))
+           'apiKey=' + os.environ.get('NEWS_API'))
 
     response = requests.get(url)
     print('response: ' + str(response))
