@@ -187,14 +187,6 @@ def evalTopic(topic):
 
 def sendEmails(urlDict, topic):
     #connect to db
-#grab envVars locally or in prod
-    path = ''
-    if os.name == 'nt':
-        path = 'C:/Users/glens/.spyder-py3/Practice Projects/SpanishDaily/SpanishDaily/home/gharold/utils/env_vars.py'
-    elif os.name == 'posix':
-        path = '/home/gharold/utils/env_vars.py'
-
-    exec(open(path).read())
     connection = mysql.connector.connect(
         host=os.environ.get('DB_HOST'),
         user=os.environ.get('DB_USER'),
@@ -243,8 +235,17 @@ def sendEmails(urlDict, topic):
 
 
 
-
+#topics to loop through daily
 topics = ['deportes', 'noticias', 'política', 'viaje', 'tecnología', 'finanzas']
+
+#grab envVars locally or in prod
+path = ''
+if os.name == 'nt':
+    path = 'C:/Users/glens/.spyder-py3/Practice Projects/SpanishDaily/SpanishDaily/home/gharold/utils/env_vars.py'
+elif os.name == 'posix':
+    path = '/home/gharold/utils/env_vars.py'
+
+exec(open(path).read())
 
 for topic in topics:
     urlDict = evalTopic(topic)
