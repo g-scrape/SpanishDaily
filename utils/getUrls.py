@@ -15,8 +15,9 @@ textstat.set_lang('es')
 from mailApp import sendEmail
 
 def getNewsUrls(subject):
-    from datetime import date
+    from datetime import date, timedelta
     date = date.today()
+    date = date - timedelta(1)
     date = date.strftime("%Y-%m-%d")
 
     url = ('https://newsapi.org/v2/everything?'
@@ -25,7 +26,6 @@ def getNewsUrls(subject):
            'from='+date+'&'
            'sortBy=popularity&'
            'apiKey=' + os.environ.get('NEWS_API'))
-
     response = requests.get(url)
     print('response: ' + str(response))
     articles = response.json()['articles']
@@ -33,7 +33,6 @@ def getNewsUrls(subject):
 
     for x in range(len(articles)):
         articleUrls.append(articles[x]['url'])
-
     return(articleUrls)
 
 
